@@ -166,7 +166,13 @@ class Reline::Windows < Reline::IO
     return val if val != 0
 
     @hConsoleHandle = @GetStdHandle.call(STD_OUTPUT_HANDLE)
-    win32func.call(@hConsoleHandle, *args)
+    val = win32func.call(@hConsoleHandle, *args)
+
+    # Remove this after confirming this patch fixed the issue
+    10.times { puts }
+    puts "Retry with refreshed console handle #{val == 0 ? 'failed. This patch has no effect' : 'succeeded'}."
+    10.times { puts }
+    val
   end
 
   private def getconsolemode
